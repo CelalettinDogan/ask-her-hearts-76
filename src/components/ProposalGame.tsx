@@ -410,15 +410,9 @@ const ProposalGame = () => {
               <div className="flex justify-center">
                 <Sparkles className="w-12 sm:w-16 h-12 sm:h-16 text-accent animate-float-heart" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-primary">
-                Aferin sana! 🌟
-              </h2>
-              <div className="space-y-4">
-                <p className="text-base sm:text-lg text-foreground font-medium">
-                  Zaten beni sevdiğini biliyordum, ben de seni seviyorum yazsın! 💕
-                </p>
-                <p className="text-muted-foreground">
-                  Şimdi seni daha yakından görmek istiyorum...
+              <div className="space-y-6">
+                <p className="text-base sm:text-lg text-foreground font-medium text-center">
+                  Zaten beni sevdiğini biliyordum, ben de seni seviyorum
                 </p>
               </div>
               <Button 
