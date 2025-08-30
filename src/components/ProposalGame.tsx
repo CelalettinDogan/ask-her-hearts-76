@@ -228,6 +228,23 @@ const ProposalGame = () => {
     }).join('');
   };
 
+  const handleGuess = () => {
+    if (riddleAnswer.toLowerCase().replace(/\s+/g, '').includes("seniseviyorum") || 
+        riddleAnswer.toLowerCase().includes("seni seviyorum")) {
+      toast({
+        title: "Doğru tahmin! 😍",
+        description: "Biliyordum ki beni seviyorsun!",
+      });
+      setTimeout(() => setCurrentStage("compliment"), 1500);
+    } else {
+      toast({
+        title: "Tekrar dene! 💭",
+        description: "Harf alarak ipucu edinebilirsin...",
+        variant: "destructive"
+      });
+    }
+  };
+
   const handleRiddleSubmit = () => {
     if (riddleAnswer.toLowerCase().includes("seni seviyorum") || riddleAnswer.toLowerCase().includes("seviyorum")) {
       toast({
@@ -361,6 +378,29 @@ const ProposalGame = () => {
                 <Heart className="mr-2 h-5 w-5" />
                 Harf Al
               </Button>
+              
+              <div className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Ya da kelimeyi tahmin et:
+                </p>
+                <Input
+                  type="text"
+                  value={riddleAnswer}
+                  onChange={(e) => setRiddleAnswer(e.target.value)}
+                  placeholder="Tahminini yaz..."
+                  className="w-full p-3 text-base border-2 border-primary/30 focus:border-primary"
+                />
+                <Button 
+                  variant="secondary"
+                  size="lg"
+                  onClick={handleGuess}
+                  className="w-full"
+                  disabled={!riddleAnswer.trim()}
+                >
+                  <Heart className="mr-2 h-5 w-5" />
+                  Tahmin Et
+                </Button>
+              </div>
             </div>
           )}
 
