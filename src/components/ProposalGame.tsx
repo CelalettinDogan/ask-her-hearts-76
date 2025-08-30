@@ -29,6 +29,7 @@ const ProposalGame = () => {
   const [showMainHeart, setShowMainHeart] = useState(false);
   const [riddleAnswer, setRiddleAnswer] = useState('');
   const [showBuildup, setShowBuildup] = useState(false);
+  const [revealedLetters, setRevealedLetters] = useState<number[]>([0, 5]); // S and S are already shown
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -188,6 +189,45 @@ const ProposalGame = () => {
     setConfetti(pieces);
   };
 
+  // Letter reveal functionality
+  const targetPhrase = "SENI SEVIYORUM";
+  const revealLetter = () => {
+    const hiddenIndexes = [];
+    for (let i = 0; i < targetPhrase.length; i++) {
+      if (!revealedLetters.includes(i) && targetPhrase[i] !== ' ') {
+        hiddenIndexes.push(i);
+      }
+    }
+    
+    if (hiddenIndexes.length > 0) {
+      const randomIndex = hiddenIndexes[Math.floor(Math.random() * hiddenIndexes.length)];
+      setRevealedLetters(prev => [...prev, randomIndex]);
+      
+      // Check if word is complete
+      const newRevealed = [...revealedLetters, randomIndex];
+      const allLettersRevealed = targetPhrase.split('').every((char, index) => 
+        char === ' ' || newRevealed.includes(index)
+      );
+      
+      if (allLettersRevealed) {
+        setTimeout(() => {
+          toast({
+            title: "Tamamlandı! 😍",
+            description: "Seni Seviyorum!",
+          });
+          setTimeout(() => setCurrentStage("compliment"), 1500);
+        }, 500);
+      }
+    }
+  };
+
+  const displayPhrase = () => {
+    return targetPhrase.split('').map((char, index) => {
+      if (char === ' ') return ' ';
+      return revealedLetters.includes(index) ? char : '_';
+    }).join('');
+  };
+
   const handleRiddleSubmit = () => {
     if (riddleAnswer.toLowerCase().includes("seni seviyorum") || riddleAnswer.toLowerCase().includes("seviyorum")) {
       toast({
@@ -219,6 +259,7 @@ const ProposalGame = () => {
     setShowMainHeart(false);
     setRiddleAnswer('');
     setShowBuildup(false);
+    setRevealedLetters([0, 5]); // Reset to initial S___ S_v_____m.
   };
 
   return (
@@ -298,32 +339,27 @@ const ProposalGame = () => {
                 <Heart className="w-12 sm:w-16 h-12 sm:h-16 text-heart animate-pulse-heart" />
               </div>
               <h2 className="text-xl sm:text-2xl font-bold text-primary">
-                Bir bulmacam var! 🧩
+                Kalbimde iki küçük kelime yazsın 💕
               </h2>
-              <div className="bg-muted/50 p-4 rounded-lg">
-                <p className="text-base sm:text-lg text-foreground font-medium mb-4">
-                  "En güzel üç kelime, <br />
-                  İçimden gelir her zaman, <br />
-                  Sana söylemek istediğim, <br />
-                  Bu üç kelime nedir?"
+              <div className="bg-muted/50 p-4 rounded-lg space-y-4">
+                <div className="text-2xl sm:text-3xl font-mono font-bold text-primary tracking-wider">
+                  {displayPhrase()}
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Harfleri açarak kelimeyi tamamla!
                 </p>
-                <Input
-                  type="text"
-                  value={riddleAnswer}
-                  onChange={(e) => setRiddleAnswer(e.target.value)}
-                  placeholder="Cevabınızı yazın..."
-                  className="w-full p-3 text-base border-2 border-primary/30 focus:border-primary"
-                />
               </div>
               <Button 
                 variant="default"
                 size="lg"
-                onClick={handleRiddleSubmit}
+                onClick={revealLetter}
                 className="w-full heart-gradient glow-effect"
-                disabled={!riddleAnswer.trim()}
+                disabled={targetPhrase.split('').every((char, index) => 
+                  char === ' ' || revealedLetters.includes(index)
+                )}
               >
                 <Heart className="mr-2 h-5 w-5" />
-                Cevabı Gönder
+                Harf Al
               </Button>
             </div>
           )}
