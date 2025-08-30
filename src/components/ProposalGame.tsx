@@ -415,7 +415,7 @@ const ProposalGame = () => {
               </h2>
               <div className="space-y-4">
                 <p className="text-base sm:text-lg text-foreground font-medium">
-                  Sen gerçekten çok zekisin! 🧠✨
+                  Zaten beni sevdiğini biliyordum, ben de seni seviyorum yazsın! 💕
                 </p>
                 <p className="text-muted-foreground">
                   Şimdi seni daha yakından görmek istiyorum...
